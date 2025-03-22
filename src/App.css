@@ -1,10 +1,14 @@
+
+/* Modern responsive container */
 #root {
-  max-width: 1280px;
+  width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
+  overflow-x: hidden;
 }
 
+/* Logo animations */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -30,6 +34,17 @@
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
+  }
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .card {
+    padding: 1em;
+  }
+  
+  #root {
+    padding: 0;
   }
 }
 
