@@ -13,13 +13,13 @@ const LoadingScreen = ({ isLoading }: LoadingScreenProps) => {
   useEffect(() => {
     if (!isLoading) return;
     
-    let interval: number | null = null;
+    let interval: ReturnType<typeof setInterval> | null = null;
     
     const startProgress = () => {
       interval = setInterval(() => {
         setProgress(prev => {
           if (prev >= 100) {
-            clearInterval(interval as number);
+            if (interval) clearInterval(interval);
             return 100;
           }
           return prev + Math.floor(Math.random() * 10) + 1;
