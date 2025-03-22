@@ -1,14 +1,17 @@
 
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, User, Search, Bell } from 'lucide-react';
+import { Menu, X, User, Search, Bell, Sun, Moon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { useTheme } from '@/contexts/ThemeContext';
+import { Toggle } from '@/components/ui/toggle';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -75,6 +78,16 @@ const Navbar = () => {
 
           {/* Desktop: Right side buttons */}
           <div className="hidden md:flex items-center space-x-4">
+            {/* Theme toggle */}
+            <Toggle 
+              pressed={theme === 'dark'} 
+              onPressedChange={toggleTheme}
+              aria-label="Toggle theme"
+              className="p-2 rounded-full"
+            >
+              {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
+            </Toggle>
+            
             <Button variant="ghost" size="icon" className="text-foreground">
               <Search size={20} />
             </Button>
@@ -91,6 +104,15 @@ const Navbar = () => {
 
           {/* Mobile menu button */}
           <div className="flex md:hidden items-center space-x-4">
+            {/* Mobile theme toggle */}
+            <Toggle 
+              pressed={theme === 'dark'} 
+              onPressedChange={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Moon size={18} /> : <Sun size={18} />}
+            </Toggle>
+            
             <Button variant="ghost" size="icon" className="text-foreground">
               <User size={20} />
             </Button>
