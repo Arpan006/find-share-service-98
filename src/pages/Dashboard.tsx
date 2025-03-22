@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Search, ShoppingBag, Wrench, Bell, Settings, LogOut, User, Heart, Activity } from 'lucide-react';
@@ -164,7 +163,7 @@ const Dashboard = () => {
                     }`}
                     onClick={() => setActiveTab('services')}
                   >
-                    <Tool size={18} className="mr-3" />
+                    <Wrench size={18} className="mr-3" />
                     My Service Bookings
                   </button>
                   <button
@@ -327,7 +326,7 @@ const Dashboard = () => {
                   className="py-8 h-auto bg-gradient-to-br from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 border-none"
                 >
                   <div className="flex flex-col items-center">
-                    <Tool size={24} className="mb-2" />
+                    <Wrench size={24} className="mb-2" />
                     <span>Book a Service</span>
                   </div>
                 </Button>
