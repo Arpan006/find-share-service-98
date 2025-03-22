@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Search, ShoppingBag, Tool, Bell, Settings, LogOut, User, Heart, Activity } from 'lucide-react';
+import { Search, ShoppingBag, Wrench, Bell, Settings, LogOut, User, Heart, Activity } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import Navbar from '@/components/layout/Navbar';
@@ -31,7 +31,7 @@ const activityData = [
     title: 'AC Repair',
     status: 'completed',
     date: '2023-06-10T09:15:00',
-    icon: <Tool className="text-primary" />
+    icon: <Wrench className="text-primary" />
   }
 ];
 
