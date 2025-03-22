@@ -6,6 +6,7 @@ import LostItemForm from '@/components/lost-found/LostItemForm';
 import FoundItemsList from '@/components/lost-found/FoundItemsList';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { Fingerprint } from 'lucide-react';
 
 const LostFound = () => {
   const [activeTab, setActiveTab] = useState('report');
@@ -43,6 +44,12 @@ const LostFound = () => {
                 Report lost items or browse found items to get reunited with your belongings.
                 Our system uses AI to match lost and found items, making the recovery process easier.
               </p>
+              
+              {/* Fingerprint verification feature highlight */}
+              <div className="mt-6 flex items-center justify-center text-sm text-muted-foreground">
+                <Fingerprint className="text-primary mr-2" size={18} />
+                <span>Now with fingerprint verification for secure item claiming</span>
+              </div>
             </motion.div>
           </section>
           
