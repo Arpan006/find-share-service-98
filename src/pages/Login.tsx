@@ -38,7 +38,7 @@ const Login = () => {
     // For demo purposes, allow any login
     toast({
       title: 'Login successful',
-      description: 'Welcome back to CommunityConnect!'
+      description: 'Welcome back to FindIt Everywhere!'
     });
     
     setIsLoading(false);
@@ -60,11 +60,11 @@ const Login = () => {
             <div className="p-8">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center">
-                  <span className="font-bold text-white text-2xl">CC</span>
+                  <span className="font-bold text-white text-2xl">FE</span>
                 </div>
                 <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
                 <p className="text-muted-foreground">
-                  Sign in to your CommunityConnect account
+                  Sign in to your FindIt Everywhere account
                 </p>
               </div>
               

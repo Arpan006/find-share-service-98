@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Fingerprint, CheckCircle, XCircle, Loader2, Smartphone } from 'lucide-react';
@@ -139,24 +138,13 @@ const FingerprintVerification = ({ onSuccess, onCancel, itemId }: FingerprintVer
     });
     
     setTimeout(() => {
-      const isMatch = Math.random() < 0.7;
-      
-      if (isMatch) {
-        setVerificationState('success');
-        toast({
-          title: 'Verification successful',
-          description: 'Your fingerprint has been verified. You can claim the item.',
-          variant: 'default',
-        });
-        setTimeout(() => onSuccess(), 1500);
-      } else {
-        setVerificationState('failure');
-        toast({
-          title: 'Verification failed',
-          description: 'Your fingerprint doesn\'t match our records for this item.',
-          variant: 'destructive',
-        });
-      }
+      setVerificationState('success');
+      toast({
+        title: 'Verification successful',
+        description: 'Your fingerprint has been verified. You can claim the item.',
+        variant: 'default',
+      });
+      setTimeout(() => onSuccess(), 1500);
     }, 2000);
   };
 

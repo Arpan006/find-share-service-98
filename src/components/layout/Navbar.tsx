@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/contexts/ThemeContext';
 import { Toggle } from '@/components/ui/toggle';
+import { useIsMobileBoolean } from '@/hooks/use-mobile';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -53,9 +54,9 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="font-bold text-white text-xl">CC</span>
+              <span className="font-bold text-white text-xl">FE</span>
             </motion.div>
-            <span className="font-bold text-lg text-primary hidden sm:block">CommunityConnect</span>
+            <span className="font-bold text-lg text-primary hidden sm:block">FindIt Everywhere</span>
           </Link>
 
           {/* Desktop Navigation */}
