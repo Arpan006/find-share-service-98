@@ -37,3 +37,10 @@ export function useIsMobile() {
 
   return { isMobile, isAndroid }
 }
+
+// This function is a wrapper around useIsMobile that returns just the boolean
+// for backward compatibility with code that expects just a boolean
+export function useIsMobileBoolean(): boolean {
+  const { isMobile } = useIsMobile()
+  return isMobile
+}

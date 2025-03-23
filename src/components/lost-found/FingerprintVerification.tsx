@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Fingerprint, CheckCircle, XCircle, Loader2, Smartphone } from 'lucide-react';
@@ -17,6 +18,7 @@ interface FingerprintResult {
   message: string;
 }
 
+// Extend the Window interface to include our custom property
 declare global {
   interface Window {
     android?: {
@@ -29,6 +31,7 @@ declare global {
         };
       };
     };
+    handleFingerprintResult?: (resultJson: string) => void;
   }
 }
 
