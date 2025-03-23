@@ -8,13 +8,14 @@ import { useToast } from '@/hooks/use-toast';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   
+  const { login, isLoading } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -30,19 +31,20 @@ const Login = () => {
       return;
     }
     
-    setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // For demo purposes, allow any login
-    toast({
-      title: 'Login successful',
-      description: 'Welcome back to FindIt Everywhere!'
-    });
-    
-    setIsLoading(false);
-    navigate('/dashboard');
+    try {
+      await login(email, password);
+      toast({
+        title: 'Login successful',
+        description: 'Welcome back to FindIt!'
+      });
+      navigate('/dashboard');
+    } catch (error) {
+      toast({
+        title: 'Login failed',
+        description: error instanceof Error ? error.message : 'Invalid credentials. Please try again.',
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
@@ -60,11 +62,11 @@ const Login = () => {
             <div className="p-8">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center">
-                  <span className="font-bold text-white text-2xl">FE</span>
+                  <span className="font-bold text-white text-2xl">F</span>
                 </div>
                 <h1 className="text-2xl font-bold mb-2">Welcome Back</h1>
                 <p className="text-muted-foreground">
-                  Sign in to your FindIt Everywhere account
+                  Sign in to your FindIt account
                 </p>
               </div>
               

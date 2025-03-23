@@ -89,11 +89,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
+    // Check if email is already registered (in localStorage)
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser.email === email) {
+        setIsLoading(false);
+        throw new Error('Email already in use');
+      }
+    }
+    
     const newUser: User = {
       id: Math.random().toString(36).substring(2, 11),
       email,
       name,
       role,
+      roomNumber: role === 'student' ? 'A-101' : undefined, // Default room for students
       greenPoints: role === 'student' ? 0 : undefined
     };
     

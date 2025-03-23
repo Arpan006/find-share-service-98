@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -17,8 +18,8 @@ const Register = () => {
   const [roomNumber, setRoomNumber] = useState('');
   const [role, setRole] = useState('student');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   
+  const { register, isLoading } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
   
@@ -43,19 +44,22 @@ const Register = () => {
       return;
     }
     
-    setIsLoading(true);
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Success message
-    toast({
-      title: 'Registration successful',
-      description: 'Your account has been created. Welcome to CommunityConnect!'
-    });
-    
-    setIsLoading(false);
-    navigate('/dashboard');
+    try {
+      await register(email, password, name, role === 'student' ? 'student' : 'staff');
+      
+      toast({
+        title: 'Registration successful',
+        description: 'Your account has been created. Welcome to FindIt!'
+      });
+      
+      navigate('/dashboard');
+    } catch (error) {
+      toast({
+        title: 'Registration failed',
+        description: error instanceof Error ? error.message : 'An error occurred. Please try again.',
+        variant: 'destructive'
+      });
+    }
   };
 
   return (
@@ -73,11 +77,11 @@ const Register = () => {
             <div className="p-8">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center">
-                  <span className="font-bold text-white text-2xl">CC</span>
+                  <span className="font-bold text-white text-2xl">F</span>
                 </div>
                 <h1 className="text-2xl font-bold mb-2">Create an Account</h1>
                 <p className="text-muted-foreground">
-                  Join the CommunityConnect platform
+                  Join the FindIt platform
                 </p>
               </div>
               
