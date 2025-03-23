@@ -145,7 +145,7 @@ const Navbar = () => {
                   to={link.path}
                   className={`block px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                     location.pathname === link.path
-                      ? 'text-white bg-primary'
+                      ? 'text-white bg-primary shadow-md'
                       : 'text-foreground hover:bg-primary/10'
                   }`}
                 >
