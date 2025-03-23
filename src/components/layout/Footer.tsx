@@ -11,9 +11,9 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <Link to="/" className="flex items-center space-x-2 mb-4">
               <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center">
-                <span className="font-bold text-white text-sm">FE</span>
+                <span className="font-bold text-white text-sm">F</span>
               </div>
-              <span className="font-bold text-lg text-primary">FindIt Everywhere</span>
+              <span className="font-bold text-lg text-primary">FindIt</span>
             </Link>
             <p className="text-muted-foreground text-sm mb-4">
               Improving hostel life at VIT Bhopal University by facilitating lost item recovery, 
@@ -29,7 +29,7 @@ const Footer = () => {
               <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="mailto:contact@finditeverywhere.com" className="text-muted-foreground hover:text-primary transition-colors">
+              <a href="mailto:contact@findit.com" className="text-muted-foreground hover:text-primary transition-colors">
                 <Mail size={20} />
               </a>
             </div>
@@ -76,7 +76,7 @@ const Footer = () => {
                 Madhya Pradesh, 466114
               </li>
               <li className="text-primary text-sm mt-2">
-                support@finditeverywhere.com
+                support@findit.com
               </li>
             </ul>
           </div>
@@ -84,7 +84,7 @@ const Footer = () => {
 
         <div className="border-t border-border/40 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-muted-foreground text-sm">
-            &copy; {new Date().getFullYear()} FindIt Everywhere. All rights reserved.
+            &copy; {new Date().getFullYear()} FindIt. All rights reserved.
           </p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link to="/privacy" className="text-muted-foreground hover:text-primary transition-colors text-sm">

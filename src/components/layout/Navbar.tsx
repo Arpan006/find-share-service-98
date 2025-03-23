@@ -54,9 +54,9 @@ const Navbar = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="font-bold text-white text-xl">FE</span>
+              <span className="font-bold text-white text-xl">F</span>
             </motion.div>
-            <span className="font-bold text-lg text-primary hidden sm:block">FindIt Everywhere</span>
+            <span className="font-bold text-lg text-primary hidden sm:block">FindIt</span>
           </Link>
 
           {/* Desktop Navigation */}

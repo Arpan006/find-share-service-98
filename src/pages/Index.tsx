@@ -55,7 +55,7 @@ const Index = () => {
       id: 1,
       name: 'Arjun Singh',
       role: 'Computer Science Student',
-      content: 'I found my lost calculator within hours of posting it on CommunityConnect. The matching system is brilliant!',
+      content: 'I found my lost calculator within hours of posting it on FindIt. The matching system is brilliant!',
       rating: 5
     },
     {
@@ -121,7 +121,7 @@ const Index = () => {
                 Welcome to VIT Bhopal's Hostel Community Platform
               </div>
               <h1 className="text-5xl md:text-6xl font-bold tracking-tighter mb-6 bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
-                CommunityConnect
+                FindIt
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground mb-8 mx-auto max-w-2xl">
                 Enhancing hostel life with a unified platform for finding lost items, 
@@ -161,7 +161,7 @@ const Index = () => {
                   <GlassMorphicCard className="w-full max-w-2xl mx-auto">
                     <div className="p-6 text-center">
                       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center">
-                        <span className="font-bold text-white text-2xl">CC</span>
+                        <span className="font-bold text-white text-2xl">F</span>
                       </div>
                       <h2 className="text-2xl font-bold mb-4">Connecting Hostel Communities</h2>
                       <p className="text-muted-foreground mb-6">
@@ -203,7 +203,7 @@ const Index = () => {
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Platform Features</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover all the ways CommunityConnect makes hostel life easier and more connected.
+              Discover all the ways FindIt makes hostel life easier and more connected.
             </p>
           </motion.div>
           
@@ -294,7 +294,7 @@ const Index = () => {
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Student Testimonials</h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Here's what students at VIT Bhopal have to say about CommunityConnect.
+              Here's what students at VIT Bhopal have to say about FindIt.
             </p>
           </motion.div>
           
@@ -342,7 +342,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Connect with Your Hostel Community?</h2>
           <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-            Join CommunityConnect today and experience an enhanced hostel life at VIT Bhopal.
+            Join FindIt today and experience an enhanced hostel life at VIT Bhopal.
           </p>
           <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90 border-none py-6 px-8 shadow-lg">
             <Link to="/register">
