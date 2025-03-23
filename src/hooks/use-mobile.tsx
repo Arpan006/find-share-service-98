@@ -5,11 +5,18 @@ const MOBILE_BREAKPOINT = 768
 
 export function useIsMobile() {
   const [isMobile, setIsMobile] = React.useState<boolean>(false)
+  const [isAndroid, setIsAndroid] = React.useState<boolean>(false)
 
   React.useEffect(() => {
-    // Initial check
+    // Check if running on mobile
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+      const isMobileDevice = window.innerWidth < MOBILE_BREAKPOINT
+      setIsMobile(isMobileDevice)
+      
+      // Check if on Android
+      const userAgent = navigator.userAgent.toLowerCase()
+      const isAndroidDevice = userAgent.indexOf("android") > -1
+      setIsAndroid(isAndroidDevice)
     }
     
     // Run on mount
@@ -28,5 +35,5 @@ export function useIsMobile() {
     return () => mql.removeEventListener("change", onChange)
   }, [])
 
-  return isMobile
+  return { isMobile, isAndroid }
 }
