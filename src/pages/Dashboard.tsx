@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
   User, Award, MapPin, Clock, Search, MessageCircle, 
-  Wrench, ShoppingBag, Eye, Fingerprint, LogOut, AlertTriangle 
+  Wrench, ShoppingBag, Eye, Fingerprint, LogOut, AlertTriangle,
+  Mail
 } from 'lucide-react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
