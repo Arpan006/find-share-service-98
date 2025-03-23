@@ -12,11 +12,6 @@ interface FingerprintVerificationProps {
   itemId: string;
 }
 
-interface FingerprintResult {
-  success: boolean;
-  message: string;
-}
-
 // Extend the Window interface to include our custom property
 declare global {
   interface Window {
@@ -80,7 +75,7 @@ const FingerprintVerification = ({ onSuccess, onCancel, itemId }: FingerprintVer
     }
   };
 
-  const handleNativeFingerprintResult = (result: FingerprintResult) => {
+  const handleNativeFingerprintResult = (result: any) => {
     setProgress(100);
     setVerificationState('processing');
     
@@ -104,6 +99,7 @@ const FingerprintVerification = ({ onSuccess, onCancel, itemId }: FingerprintVer
     }, 1000);
   };
 
+  // Modified to provide consistent results based on itemId
   const simulateFingerprintScan = () => {
     toast({
       title: 'Connecting to fingerprint scanner',
@@ -131,20 +127,34 @@ const FingerprintVerification = ({ onSuccess, onCancel, itemId }: FingerprintVer
     }
   };
 
+  // Modified to provide consistent results based on itemId
   const processFingerprint = () => {
     toast({
       title: 'Processing fingerprint',
       description: 'Our AI is analyzing your fingerprint pattern',
     });
     
+    // Use a deterministic approach based on itemId instead of random
+    // This ensures consistent results for the same item
+    const isSuccess = itemId.length % 2 === 0; // Simple deterministic rule
+    
     setTimeout(() => {
-      setVerificationState('success');
-      toast({
-        title: 'Verification successful',
-        description: 'Your fingerprint has been verified. You can claim the item.',
-        variant: 'default',
-      });
-      setTimeout(() => onSuccess(), 1500);
+      if (isSuccess) {
+        setVerificationState('success');
+        toast({
+          title: 'Verification successful',
+          description: 'Your fingerprint has been verified. You can claim the item.',
+          variant: 'default',
+        });
+        setTimeout(() => onSuccess(), 1500);
+      } else {
+        setVerificationState('failure');
+        toast({
+          title: 'Verification failed',
+          description: 'Your fingerprint doesn\'t match our records for this item.',
+          variant: 'destructive',
+        });
+      }
     }, 2000);
   };
 

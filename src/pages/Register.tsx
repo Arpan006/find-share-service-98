@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -45,7 +44,13 @@ const Register = () => {
     }
     
     try {
-      await register(email, password, name, role === 'student' ? 'student' : 'staff');
+      await register(
+        email, 
+        password, 
+        name, 
+        role === 'student' ? 'student' : 'staff',
+        role === 'student' ? roomNumber : undefined
+      );
       
       toast({
         title: 'Registration successful',
