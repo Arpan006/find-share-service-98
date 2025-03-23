@@ -5,13 +5,13 @@
 
 **Tagline**: *FindIt – Locate, Share, and Fix in Your Hostel*
 
-##TEAM MEMBERS
-Arpan aggarwal 
-Akshat bhavsar
-ahana chakraborty
-suhani mandal 
-anouska mandal 
-sanyam bhavsar 
+**TEAM MEMBERS**
+**Arpan aggarwal 
+  Akshat bhavsar
+  Ahana chakraborty
+  Suhani mandal 
+  Anouska mandal 
+  Sanyam bhavsar **
 
 ## Table of Contents
 - [Project Overview](#project-overview)
