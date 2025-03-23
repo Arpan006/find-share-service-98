@@ -1,5 +1,6 @@
 
 import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { toast } from "@/hooks/use-toast";
 
 interface User {
   id: string;
@@ -17,9 +18,10 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name: string, role: 'student' | 'staff', roomNumber?: string) => Promise<void>;
   logout: () => void;
+  updateGreenPoints: (points: number) => void;
 }
 
-// We'll store users in localStorage under this key
+// We'll store users in localStorage under these keys
 const USERS_STORAGE_KEY = 'findit_users';
 const CURRENT_USER_KEY = 'findit_current_user';
 
@@ -58,6 +60,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           password: 'password', // In a real app, this would be hashed
           name: 'Jane Smith',
           role: 'staff'
+        },
+        {
+          id: '3',
+          email: 'admin@example.com',
+          password: 'password', // In a real app, this would be hashed
+          name: 'Admin User',
+          role: 'admin'
         }
       ];
       localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(initialUsers));
@@ -112,6 +121,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       setUser(loggedInUser);
       localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(loggedInUser));
+      toast({
+        title: "Login successful",
+        description: `Welcome back, ${loggedInUser.name}!`,
+      });
     } else {
       throw new Error('Invalid credentials');
     }
@@ -159,13 +172,47 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     
     setUser(loggedInUser);
     localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(loggedInUser));
+    toast({
+      title: "Registration successful",
+      description: `Welcome to FindIt, ${loggedInUser.name}!`,
+    });
+    
     setIsLoading(false);
+  };
+
+  // Update green points
+  const updateGreenPoints = (points: number) => {
+    if (!user) return;
+    
+    const updatedUser = {
+      ...user,
+      greenPoints: (user.greenPoints || 0) + points
+    };
+    
+    setUser(updatedUser);
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(updatedUser));
+    
+    // Update in users list
+    const users = getUsers();
+    const updatedUsers = users.map((u: any) => 
+      u.id === user.id ? {...u, greenPoints: updatedUser.greenPoints} : u
+    );
+    saveUsers(updatedUsers);
+    
+    toast({
+      title: points > 0 ? "Green Points Added!" : "Green Points Deducted",
+      description: `${Math.abs(points)} green points ${points > 0 ? 'added to' : 'deducted from'} your account.`,
+    });
   };
 
   // Logout function
   const logout = () => {
     setUser(null);
     localStorage.removeItem(CURRENT_USER_KEY);
+    toast({
+      title: "Logged out",
+      description: "You have been logged out successfully.",
+    });
   };
 
   const value = {
@@ -175,6 +222,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     login,
     register,
     logout,
+    updateGreenPoints
   };
 
   return (

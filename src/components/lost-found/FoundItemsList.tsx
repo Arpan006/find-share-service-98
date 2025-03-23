@@ -1,48 +1,62 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Search, MapPin, Calendar, Layers, Filter, Fingerprint } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
 import FingerprintVerification from './FingerprintVerification';
 
-// Mock data for found items
-const mockFoundItems = [
+// Storage key for lost and found items
+const LOST_ITEMS_STORAGE_KEY = 'findit_lost_items';
+const FOUND_ITEMS_STORAGE_KEY = 'findit_found_items';
+
+// Default found items if none exist
+const defaultFoundItems = [
   {
     id: '1',
     name: 'Blue Notebook',
     description: 'A blue spiral notebook with "Organic Chemistry" written on the cover.',
     location: 'Library',
-    dateFound: '2023-06-15',
-    image: 'https://images.unsplash.com/photo-1600095077943-9059ad6fde2a?q=80&w=200',
-    status: 'available'
+    dateFound: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
+    imageUrl: 'https://images.unsplash.com/photo-1600095077943-9059ad6fde2a?q=80&w=200',
+    status: 'available',
+    staffId: '2',
+    staffName: 'Jane Smith'
   },
   {
     id: '2',
     name: 'Silver Watch',
     description: 'A silver analog watch with a leather strap. Brand appears to be Fossil.',
     location: 'Dining Hall',
-    dateFound: '2023-06-10',
-    image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=200',
-    status: 'available'
+    dateFound: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), // 10 days ago
+    imageUrl: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?q=80&w=200',
+    status: 'available',
+    staffId: '2',
+    staffName: 'Jane Smith'
   },
   {
     id: '3',
     name: 'USB Drive',
     description: '32GB SanDisk USB drive, black and red in color.',
     location: 'Study Room',
-    dateFound: '2023-06-05',
-    image: 'https://images.unsplash.com/photo-1647427060118-4911c9821b82?q=80&w=200',
-    status: 'available'
+    dateFound: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(), // 15 days ago
+    imageUrl: 'https://images.unsplash.com/photo-1647427060118-4911c9821b82?q=80&w=200',
+    status: 'available',
+    staffId: '2',
+    staffName: 'Jane Smith'
   },
   {
     id: '4',
     name: 'Water Bottle',
     description: 'Blue hydroflask water bottle with a few stickers on it.',
     location: 'Sports Complex',
-    dateFound: '2023-06-01',
-    image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=200',
-    status: 'available'
+    dateFound: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(), // 20 days ago
+    imageUrl: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?q=80&w=200',
+    status: 'available',
+    staffId: '2',
+    staffName: 'Jane Smith'
   }
 ];
 
@@ -59,31 +73,104 @@ const locations = [
   'Lab Complex'
 ];
 
+// Initialize found items in localStorage if they don't exist
+const initializeFoundItems = () => {
+  const foundItems = localStorage.getItem(FOUND_ITEMS_STORAGE_KEY);
+  if (!foundItems) {
+    localStorage.setItem(FOUND_ITEMS_STORAGE_KEY, JSON.stringify(defaultFoundItems));
+  }
+};
+
+// Get found items from localStorage
+const getFoundItems = () => {
+  initializeFoundItems();
+  const foundItems = localStorage.getItem(FOUND_ITEMS_STORAGE_KEY);
+  return foundItems ? JSON.parse(foundItems) : [];
+};
+
+// Update found item status in localStorage
+const updateFoundItemStatus = (itemId: string, status: string) => {
+  const foundItems = getFoundItems();
+  const updatedItems = foundItems.map((item: any) => 
+    item.id === itemId ? {...item, status} : item
+  );
+  localStorage.setItem(FOUND_ITEMS_STORAGE_KEY, JSON.stringify(updatedItems));
+  return updatedItems;
+};
+
 const FoundItemsList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('All Locations');
   const [showFilters, setShowFilters] = useState(false);
   const [verifyingItemId, setVerifyingItemId] = useState<string | null>(null);
+  const [foundItems, setFoundItems] = useState<any[]>([]);
+  
+  const { user, updateGreenPoints } = useAuth();
   const { toast } = useToast();
   
+  // Load found items on component mount
+  useEffect(() => {
+    setFoundItems(getFoundItems());
+  }, []);
+  
   // Filter items based on search term and location
-  const filteredItems = mockFoundItems.filter(item => {
+  const filteredItems = foundItems.filter(item => {
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesLocation = selectedLocation === 'All Locations' || item.location === selectedLocation;
+    const isAvailable = item.status === 'available';
     
-    return matchesSearch && matchesLocation;
+    return matchesSearch && matchesLocation && isAvailable;
   });
 
   const handleClaimItem = (itemId: string) => {
+    if (!user) {
+      toast({
+        title: 'Authentication required',
+        description: 'Please log in to claim an item',
+        variant: 'destructive'
+      });
+      return;
+    }
+    
     setVerifyingItemId(itemId);
   };
 
   const handleVerificationSuccess = () => {
+    if (!verifyingItemId || !user) return;
+    
+    // Update the found item status
+    const updatedItems = updateFoundItemStatus(verifyingItemId, 'claimed');
+    setFoundItems(updatedItems);
+    
+    // Log the claim in lost items if it's a match
+    const lostItems = localStorage.getItem(LOST_ITEMS_STORAGE_KEY);
+    if (lostItems) {
+      const parsedLostItems = JSON.parse(lostItems);
+      const matchingLostItem = parsedLostItems.find((item: any) => 
+        item.userId === user.id && 
+        item.status === 'not_found' &&
+        item.name.toLowerCase() === 
+        foundItems.find((found) => found.id === verifyingItemId)?.name.toLowerCase()
+      );
+      
+      if (matchingLostItem) {
+        // Update lost item status
+        matchingLostItem.status = 'claimed';
+        localStorage.setItem(LOST_ITEMS_STORAGE_KEY, JSON.stringify(parsedLostItems));
+        
+        // Award green points for recovering a lost item
+        if (user.role === 'student') {
+          updateGreenPoints(15);
+        }
+      }
+    }
+    
     toast({
       title: 'Item claimed successfully',
       description: 'Please collect your item from the lost and found desk.',
     });
+    
     setVerifyingItemId(null);
   };
 
@@ -196,7 +283,7 @@ const FoundItemsList = () => {
                     <div className="flex flex-col h-full">
                       <div className="relative mb-4 rounded-lg overflow-hidden bg-muted h-48">
                         <img 
-                          src={item.image} 
+                          src={item.imageUrl} 
                           alt={item.name} 
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                           loading="lazy"

@@ -33,10 +33,6 @@ const Login = () => {
     
     try {
       await login(email, password);
-      toast({
-        title: 'Login successful',
-        description: 'Welcome back to FindIt!'
-      });
       navigate('/dashboard');
     } catch (error) {
       toast({
@@ -173,7 +169,8 @@ const Login = () => {
                 <p className="text-xs text-center text-muted-foreground">
                   <strong>Demo Credentials:</strong><br />
                   Student: student@example.com / password<br />
-                  Staff: staff@example.com / password
+                  Staff: staff@example.com / password<br />
+                  Admin: admin@example.com / password
                 </p>
               </div>
             </div>

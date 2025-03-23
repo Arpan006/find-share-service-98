@@ -4,7 +4,12 @@ import { motion } from 'framer-motion';
 import { MapPin, Calendar, Camera, Search, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import GlassMorphicCard from '@/components/ui/GlassMorphicCard';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 
 const locations = [
   'Dining Hall',
@@ -19,16 +24,20 @@ const locations = [
   'Other'
 ];
 
+// Storage key for lost items
+const LOST_ITEMS_STORAGE_KEY = 'findit_lost_items';
+
 const LostItemForm = () => {
   const [itemName, setItemName] = useState('');
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const { toast } = useToast();
+  const { user, updateGreenPoints } = useAuth();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -40,6 +49,15 @@ const LostItemForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!user) {
+      toast({
+        title: 'Authentication required',
+        description: 'Please log in to report a lost item',
+        variant: 'destructive'
+      });
+      return;
+    }
     
     if (!itemName || !description || !location || !date) {
       toast({
@@ -55,17 +73,43 @@ const LostItemForm = () => {
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1500));
     
+    // Create lost item object
+    const lostItem = {
+      id: Math.random().toString(36).substring(2, 11),
+      name: itemName,
+      description,
+      location,
+      dateLost: date.toISOString(),
+      imageUrl: preview,
+      userId: user.id,
+      userName: user.name,
+      userEmail: user.email,
+      status: 'not_found', // not_found, matched, claimed
+      dateReported: new Date().toISOString(),
+    };
+    
+    // Save to localStorage
+    const storedItems = localStorage.getItem(LOST_ITEMS_STORAGE_KEY);
+    const items = storedItems ? JSON.parse(storedItems) : [];
+    items.push(lostItem);
+    localStorage.setItem(LOST_ITEMS_STORAGE_KEY, JSON.stringify(items));
+    
     // Success message
     toast({
       title: 'Item reported',
       description: 'Your lost item has been reported successfully. We\'ll notify you if we find a match.',
     });
     
+    // Award green points for reporting
+    if (user.role === 'student') {
+      updateGreenPoints(5);
+    }
+    
     // Reset form
     setItemName('');
     setDescription('');
     setLocation('');
-    setDate('');
+    setDate(undefined);
     setImage(null);
     setPreview(null);
     setIsSubmitting(false);
@@ -146,24 +190,37 @@ const LostItemForm = () => {
               </div>
             </div>
             
-            {/* Date */}
+            {/* Date - Fixed with a proper date picker */}
             <div>
               <label htmlFor="date" className="block text-sm font-medium text-foreground mb-1">
                 Date Lost *
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Calendar size={18} className="text-muted-foreground" />
-                </div>
-                <input
-                  id="date"
-                  type="date"
-                  className="input-field pl-10"
-                  value={date}
-                  onChange={e => setDate(e.target.value)}
-                  required
-                />
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full pl-10 relative text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Calendar size={18} className="text-muted-foreground" />
+                    </div>
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                    disabled={(currentDate) => currentDate > new Date()}
+                    className="p-3 pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
           
@@ -211,7 +268,7 @@ const LostItemForm = () => {
               )}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">
-              Adding a photo increases the chances of finding your item.
+              Adding a photo increases the chances of finding your item by 80%.
             </p>
           </div>
         </div>

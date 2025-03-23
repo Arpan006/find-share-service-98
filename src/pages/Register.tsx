@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -51,11 +52,6 @@ const Register = () => {
         role === 'student' ? 'student' : 'staff',
         role === 'student' ? roomNumber : undefined
       );
-      
-      toast({
-        title: 'Registration successful',
-        description: 'Your account has been created. Welcome to FindIt!'
-      });
       
       navigate('/dashboard');
     } catch (error) {
@@ -181,7 +177,7 @@ const Register = () => {
                         value={roomNumber}
                         onChange={e => setRoomNumber(e.target.value)}
                         disabled={isLoading}
-                        required
+                        required={role === 'student'}
                       />
                     </div>
                   </div>
